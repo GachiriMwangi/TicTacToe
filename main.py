@@ -1,21 +1,35 @@
 class TicTacToe:
+    
     def __init__(self):
+        # Initialize an empty  3X3 board as a list of 9 spaces
         self.board = [' ' for _ in range(9)]
+        # Set current winner to None
         self.current_winner = None
-
+    # Display the current state of the board. 
+    # Splits teh board into 3 rows and formats them with dividers
     def print_board(self):
         for row in [self.board[i*3:(i+1)*3] for i in range(3)]:
             print('| ' + ' | '.join(row) + ' |')
 
+    # Returns a list of all the empty positions on the board
+    # Uses list comprehension to find squares that contain a space. 
     def available_moves(self):
         return [i for i, spot in enumerate(self.board) if spot == ' ']
-
+    
+    # Check if there are any empty spaces left on the board. 
+    # Return True if at least one space exist
     def empty_squares(self):
         return ' ' in self.board
 
+    # Count the number of empty spaces remaining
+    # Uses count() method.
     def num_empty_squares(self):
         return self.board.count(' ')
 
+# Attempts to place 'X' or 'O' at the specified square
+# Returns True if successful (square was empty)
+# Checks if this move created a winner
+# Returns False if square was already occupied
     def make_move(self, square, letter):
         if self.board[square] == ' ':
             self.board[square] = letter
@@ -24,6 +38,10 @@ class TicTacToe:
             return True
         return False
 
+# Checks if the last move won the game
+# Examines the affected row, column, and diagonals
+# Returns True if three matching letters are found in any line
+#     
     def winner(self, square, letter):
         # Check row
         row_ind = square // 3
@@ -56,7 +74,10 @@ def minimax(board, maximizing, alpha, beta):
         return -1
     elif not board.empty_squares():
         return 0
-
+    
+# Tries all possible moves
+# Recursively evaluates each move
+# Returns the highest score found
     if maximizing:
         max_eval = float('-inf')
         for move in board.available_moves():
@@ -70,6 +91,7 @@ def minimax(board, maximizing, alpha, beta):
                 break
         return max_eval
     else:
+        # Returns the lowest score
         min_eval = float('inf')
         for move in board.available_moves():
             board.make_move(move, 'O')
@@ -81,7 +103,10 @@ def minimax(board, maximizing, alpha, beta):
             if beta <= alpha:
                 break
         return min_eval
-
+    
+# Uses minimax to evaluate every possible move
+# Keeps track of the move that leads to the best score
+# Returns the index of the best move found
 def get_best_move(board):
     best_score = float('-inf')
     best_move = None
